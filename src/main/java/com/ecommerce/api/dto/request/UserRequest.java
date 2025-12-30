@@ -1,5 +1,7 @@
 package com.ecommerce.api.dto.request;
 
+import com.ecommerce.api.validation.ValidPassword;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -21,5 +23,6 @@ public class UserRequest {
 
   @NotBlank(message = "Password is required")
   @Size(min = 8, message = "Password must be at least 8 characters")
+  @ValidPassword
   private String password;
 }

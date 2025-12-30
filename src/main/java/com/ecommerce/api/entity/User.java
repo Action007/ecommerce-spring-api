@@ -1,5 +1,7 @@
 package com.ecommerce.api.entity;
 
+import java.time.Instant;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -31,6 +33,12 @@ public class User extends BaseEntity {
   private String password;
 
   @Enumerated(EnumType.STRING)
-  @Column(nullable = false)
+  @Column(name = "role", nullable = false)
   private Role role = Role.CUSTOMER;
+
+  @Column(name = "deleted", nullable = false)
+  private boolean deleted = false;
+
+  @Column(name = "deleted_at")
+  private Instant deletedAt;
 }

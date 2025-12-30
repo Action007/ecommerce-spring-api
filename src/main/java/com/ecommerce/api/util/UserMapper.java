@@ -8,7 +8,6 @@ import com.ecommerce.api.entity.User;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-
   UserResponse toResponse(User user);
 
   @Mapping(target = "id", ignore = true)

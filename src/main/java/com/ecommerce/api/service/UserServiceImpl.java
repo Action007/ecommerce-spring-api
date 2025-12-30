@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional; // Use Spring's
 import com.ecommerce.api.dto.request.UserRequest;
 import com.ecommerce.api.dto.response.UserResponse;
 import com.ecommerce.api.entity.User;
+import com.ecommerce.api.exception.DuplicateResourceException;
+import com.ecommerce.api.exception.ResourceNotFoundException;
 import com.ecommerce.api.repository.UserRepository;
 import com.ecommerce.api.util.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +23,7 @@ public class UserServiceImpl implements UserService {
   @Transactional
   public UserResponse createUser(UserRequest request) {
     if (userRepository.existsByEmail(request.getEmail())) {
-      throw new RuntimeException("Email already exists");
+      throw new DuplicateResourceException("User already exists with this email");
     }
 
     User user = userMapper.toEntity(request);
@@ -33,7 +35,15 @@ public class UserServiceImpl implements UserService {
   @Override
   public UserResponse getUserById(UUID id) {
     User user = userRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+        .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+
+    return userMapper.toResponse(user);
+  }
+
+  @Override
+  public UserResponse getUserByEmail(String email) {
+    User user = userRepository.findByEmail(email)
+        .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
 
     return userMapper.toResponse(user);
   }
@@ -48,7 +58,7 @@ public class UserServiceImpl implements UserService {
   @Transactional
   public UserResponse updateUser(UUID id, UserRequest request) {
     User user = userRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+        .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
 
     user.setFirstName(request.getFirstName());
     user.setLastName(request.getLastName());
@@ -63,7 +73,7 @@ public class UserServiceImpl implements UserService {
   @Transactional
   public void deleteUser(UUID id) {
     User user = userRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+        .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
 
     userRepository.delete(user);
   }
