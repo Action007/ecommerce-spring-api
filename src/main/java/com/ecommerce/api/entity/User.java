@@ -2,6 +2,8 @@ package com.ecommerce.api.entity;
 
 import java.time.Instant;
 
+import org.hibernate.annotations.SQLRestriction;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -14,31 +16,31 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "users")
+@SQLRestriction("deleted = false")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends BaseEntity {
 
-  @Column(name = "first_name", nullable = false, length = 50)
+  @Column(nullable = false, length = 50)
   private String firstName;
 
-  @Column(name = "last_name", nullable = false, length = 50)
+  @Column(nullable = false, length = 50)
   private String lastName;
 
-  @Column(name = "email", nullable = false, unique = true)
+  @Column(nullable = false, unique = true)
   private String email;
 
-  @Column(name = "password", nullable = false)
+  @Column(nullable = false)
   private String password;
 
   @Enumerated(EnumType.STRING)
-  @Column(name = "role", nullable = false)
+  @Column(nullable = false)
   private Role role = Role.CUSTOMER;
 
-  @Column(name = "deleted", nullable = false)
+  @Column(nullable = false)
   private boolean deleted = false;
 
-  @Column(name = "deleted_at")
   private Instant deletedAt;
 }

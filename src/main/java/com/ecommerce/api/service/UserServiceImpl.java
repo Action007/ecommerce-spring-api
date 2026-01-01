@@ -1,5 +1,6 @@
 package com.ecommerce.api.service;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
@@ -75,6 +76,8 @@ public class UserServiceImpl implements UserService {
     User user = userRepository.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
 
-    userRepository.delete(user);
+    user.setDeleted(true);
+    user.setDeletedAt(Instant.now());
+    userRepository.save(user);
   }
 }
