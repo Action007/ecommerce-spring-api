@@ -16,7 +16,6 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "users")
-@SQLRestriction("deleted = false")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -38,9 +37,4 @@ public class User extends BaseEntity {
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   private Role role = Role.CUSTOMER;
-
-  @Column(nullable = false)
-  private boolean deleted = false;
-
-  private Instant deletedAt;
 }

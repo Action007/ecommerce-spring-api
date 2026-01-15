@@ -1,4 +1,4 @@
-package com.ecommerce.api.util;
+package com.ecommerce.api.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

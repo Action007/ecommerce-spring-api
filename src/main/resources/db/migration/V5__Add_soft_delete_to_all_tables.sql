@@ -1,0 +1,12 @@
+-- Add columns only if they don't exist
+ALTER TABLE users
+ADD COLUMN IF NOT EXISTS deleted BOOLEAN NOT NULL DEFAULT false;
+
+ALTER TABLE users
+ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMP;
+
+ALTER TABLE categories
+ADD COLUMN IF NOT EXISTS deleted BOOLEAN NOT NULL DEFAULT false;
+
+ALTER TABLE categories
+ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMP;

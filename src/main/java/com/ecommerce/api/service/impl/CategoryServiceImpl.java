@@ -11,9 +11,9 @@ import com.ecommerce.api.dto.response.CategoryResponse;
 import com.ecommerce.api.entity.Category;
 import com.ecommerce.api.exception.DuplicateResourceException;
 import com.ecommerce.api.exception.ResourceNotFoundException;
+import com.ecommerce.api.mapper.CategoryMapper;
 import com.ecommerce.api.repository.CategoryRepository;
 import com.ecommerce.api.service.CategoryService;
-import com.ecommerce.api.util.CategoryMapper;
 
 import lombok.RequiredArgsConstructor;
 

@@ -1,6 +1,10 @@
 package com.ecommerce.api.entity;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.SQLRestriction;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,7 +21,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "products", indexes = @Index(name = "idx_product_name", columnList = "name"))
+@Table(name = "products", indexes = { @Index(name = "idx_product_name", columnList = "name"),
+        @Index(name = "idx_product_category", columnList = "category_id") })
 @Getter
 @Setter
 @NoArgsConstructor

@@ -1,4 +1,4 @@
-package com.ecommerce.api.util;
+package com.ecommerce.api.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -19,5 +19,7 @@ public interface CategoryMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "parent", ignore = true)
     @Mapping(target = "children", ignore = true)
+    @Mapping(target = "deleted", ignore = true)
+    @Mapping(target = "deletedAt", ignore = true)
     Category toEntity(CategoryRequest request);
 }

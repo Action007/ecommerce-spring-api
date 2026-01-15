@@ -2,10 +2,13 @@ package com.ecommerce.api.entity;
 
 import java.time.Instant;
 import java.util.UUID;
+
+import org.hibernate.annotations.SQLRestriction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,6 +21,7 @@ import lombok.Setter;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
+@SQLRestriction("deleted = false")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -33,4 +37,9 @@ public class BaseEntity {
 
   @LastModifiedDate
   private Instant updatedAt;
+
+  @Column(nullable = false)
+  private Boolean deleted = false;
+
+  private Instant deletedAt;
 }

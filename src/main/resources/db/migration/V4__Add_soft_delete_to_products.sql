@@ -1,0 +1,5 @@
+ALTER TABLE products
+ADD COLUMN deleted BOOLEAN NOT NULL DEFAULT false;
+
+ALTER TABLE products
+ADD COLUMN deleted_at TIMESTAMP;

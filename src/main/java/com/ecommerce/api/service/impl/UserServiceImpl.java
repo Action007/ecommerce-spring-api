@@ -10,9 +10,10 @@ import com.ecommerce.api.dto.response.UserResponse;
 import com.ecommerce.api.entity.User;
 import com.ecommerce.api.exception.DuplicateResourceException;
 import com.ecommerce.api.exception.ResourceNotFoundException;
+import com.ecommerce.api.mapper.UserMapper;
 import com.ecommerce.api.repository.UserRepository;
 import com.ecommerce.api.service.UserService;
-import com.ecommerce.api.util.UserMapper;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
