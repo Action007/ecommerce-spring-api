@@ -1,4 +1,4 @@
-package com.ecommerce.api.service;
+package com.ecommerce.api.service.impl;
 
 import java.time.Instant;
 import java.util.List;
@@ -11,6 +11,7 @@ import com.ecommerce.api.entity.User;
 import com.ecommerce.api.exception.DuplicateResourceException;
 import com.ecommerce.api.exception.ResourceNotFoundException;
 import com.ecommerce.api.repository.UserRepository;
+import com.ecommerce.api.service.UserService;
 import com.ecommerce.api.util.UserMapper;
 import lombok.RequiredArgsConstructor;
 

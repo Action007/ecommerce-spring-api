@@ -15,7 +15,7 @@ import com.ecommerce.api.dto.response.UserResponse;
 import com.ecommerce.api.entity.Role;
 import com.ecommerce.api.entity.User;
 import com.ecommerce.api.repository.UserRepository;
-import com.ecommerce.api.service.UserServiceImpl;
+import com.ecommerce.api.service.impl.UserServiceImpl;
 import com.ecommerce.api.util.UserMapper;
 
 @ExtendWith(MockitoExtension.class)
