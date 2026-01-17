@@ -2,7 +2,6 @@ package com.ecommerce.api.dto.response;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 import lombok.Builder;
@@ -18,4 +17,7 @@ public class ProductResponse {
     private Integer stockQuantity;
     private String categoryName;
     private Instant createdAt;
+    private String imageUrl;
+    private BigDecimal averageRating;
+    private Integer ratingCount;
 }
