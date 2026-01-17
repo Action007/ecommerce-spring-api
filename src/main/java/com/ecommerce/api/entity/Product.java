@@ -43,7 +43,7 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @Column(name = "image_url", length = 500)
+    @Column(nullable = false, name = "image_url", length = 500)
     private String imageUrl;
 
     @Column(name = "average_rating", precision = 3, scale = 2)

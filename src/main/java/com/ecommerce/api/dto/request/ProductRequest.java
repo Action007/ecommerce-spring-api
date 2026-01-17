@@ -25,5 +25,6 @@ public class ProductRequest {
     @NotNull(message = "Category is required")
     private UUID categoryId;
 
+    @NotNull(message = "Image URL is required")
     private String imageUrl;
 }

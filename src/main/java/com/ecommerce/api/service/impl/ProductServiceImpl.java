@@ -95,6 +95,10 @@ public class ProductServiceImpl implements ProductService {
                 Product product = productRepository.findById(id)
                                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
+                if (product.getDeleted() == true) {
+                        throw new ResourceNotFoundException("Product not found");
+                }
+
                 product.setDeleted(true);
                 product.setDeletedAt(Instant.now());
                 productRepository.save(product);
