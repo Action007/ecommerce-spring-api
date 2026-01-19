@@ -3,6 +3,8 @@ package com.ecommerce.api.service.impl;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional; // Use Spring's, not Jakarta
 import com.ecommerce.api.dto.request.UserRequest;
@@ -18,9 +20,11 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImplc implements UserService {
+
   private final UserRepository userRepository;
   private final UserMapper userMapper;
+  private final PasswordEncoder passwordEncoder;
 
   @Override
   @Transactional
@@ -29,7 +33,11 @@ public class UserServiceImpl implements UserService {
       throw new DuplicateResourceException("User already exists with this email");
     }
 
+    String hashedPassword = passwordEncoder.encode(request.getPassword());
+
     User user = userMapper.toEntity(request);
+    user.setPassword(hashedPassword);
+
     User savedUser = userRepository.save(user);
 
     return userMapper.toResponse(savedUser);
