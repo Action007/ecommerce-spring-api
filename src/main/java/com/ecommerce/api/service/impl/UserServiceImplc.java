@@ -47,7 +47,6 @@ public class UserServiceImplc implements UserService {
   public UserResponse getUserById(UUID id) {
     User user = userRepository.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
-
     return userMapper.toResponse(user);
   }
 

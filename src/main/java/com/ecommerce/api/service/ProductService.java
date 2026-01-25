@@ -8,13 +8,13 @@ import com.ecommerce.api.dto.response.PageResponse;
 import com.ecommerce.api.dto.response.ProductResponse;
 
 public interface ProductService {
-    public ProductResponse createProduct(ProductRequest request);
+    ProductResponse createProduct(ProductRequest request);
 
-    public ProductResponse updateProduct(UUID id, ProductRequest request);
+    ProductResponse updateProduct(UUID id, ProductRequest request);
 
-    public void deleteProduct(UUID id);
+    void deleteProduct(UUID id);
 
-    public PageResponse<ProductResponse> searchProducts(
+    PageResponse<ProductResponse> searchProducts(
             String name,
             BigDecimal minPrice,
             BigDecimal maxPrice,
@@ -24,9 +24,9 @@ public interface ProductService {
             String sortBy,
             String sortDir);
 
-    public ProductResponse getProductById(UUID id);
+    ProductResponse getProductById(UUID id);
 
-    public void updateProductRating(UUID productId, int newRating);
+    void updateProductRating(UUID productId, int newRating);
 
-    public PageResponse<ProductResponse> getRelatedProducts(UUID productId, int page, int size);
+    PageResponse<ProductResponse> getRelatedProducts(UUID productId, int page, int size);
 }
