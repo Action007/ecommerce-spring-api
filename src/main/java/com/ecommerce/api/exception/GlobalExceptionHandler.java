@@ -5,6 +5,7 @@ import java.time.Instant;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -17,7 +18,8 @@ import com.ecommerce.api.dto.response.ErrorResponse;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-        // Business logic errors
+        // ========== BUSINESS LOGIC ERRORS ==========
+
         @ExceptionHandler(ResourceNotFoundException.class)
         public ResponseEntity<ErrorResponse> handleResourceNotFound(
                         ResourceNotFoundException ex,
@@ -32,22 +34,6 @@ public class GlobalExceptionHandler {
                                 .build();
 
                 return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
-        }
-
-        @ExceptionHandler(InvalidTokenException.class)
-        public ResponseEntity<ErrorResponse> handleInvalidTokenException(
-                        InvalidTokenException ex,
-                        WebRequest request) {
-
-                ErrorResponse errorResponse = ErrorResponse.builder()
-                                .timestamp(Instant.now())
-                                .status(HttpStatus.UNAUTHORIZED.value())
-                                .error("Unauthorized")
-                                .message(ex.getMessage())
-                                .path(request.getDescription(false).replace("uri=", ""))
-                                .build();
-
-                return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
         }
 
         @ExceptionHandler(DuplicateResourceException.class)
@@ -66,7 +52,74 @@ public class GlobalExceptionHandler {
                 return new ResponseEntity<>(error, HttpStatus.CONFLICT);
         }
 
-        // Validation errors (@Valid)
+        // ========== SECURITY & AUTHENTICATION ERRORS ==========
+
+        @ExceptionHandler(InvalidTokenException.class)
+        public ResponseEntity<ErrorResponse> handleInvalidTokenException(
+                        InvalidTokenException ex,
+                        WebRequest request) {
+
+                ErrorResponse errorResponse = ErrorResponse.builder()
+                                .timestamp(Instant.now())
+                                .status(HttpStatus.UNAUTHORIZED.value())
+                                .error("Unauthorized")
+                                .message(ex.getMessage())
+                                .path(request.getDescription(false).replace("uri=", ""))
+                                .build();
+
+                return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+        }
+
+        @ExceptionHandler(UnauthorizedException.class)
+        public ResponseEntity<ErrorResponse> handleUnauthorizedException(
+                        UnauthorizedException ex,
+                        WebRequest request) {
+
+                ErrorResponse error = ErrorResponse.builder()
+                                .timestamp(Instant.now())
+                                .status(HttpStatus.UNAUTHORIZED.value())
+                                .error("Unauthorized")
+                                .message(ex.getMessage())
+                                .path(request.getDescription(false).replace("uri=", ""))
+                                .build();
+
+                return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+        }
+
+        @ExceptionHandler(ForbiddenException.class)
+        public ResponseEntity<ErrorResponse> handleForbiddenException(
+                        ForbiddenException ex,
+                        WebRequest request) {
+
+                ErrorResponse error = ErrorResponse.builder()
+                                .timestamp(Instant.now())
+                                .status(HttpStatus.FORBIDDEN.value())
+                                .error("Forbidden")
+                                .message(ex.getMessage())
+                                .path(request.getDescription(false).replace("uri=", ""))
+                                .build();
+
+                return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
+        }
+
+        @ExceptionHandler(AccessDeniedException.class)
+        public ResponseEntity<ErrorResponse> handleAccessDeniedException(
+                        AccessDeniedException ex,
+                        WebRequest request) {
+
+                ErrorResponse error = ErrorResponse.builder()
+                                .timestamp(Instant.now())
+                                .status(HttpStatus.FORBIDDEN.value())
+                                .error("Forbidden")
+                                .message("You don't have permission to access this resource")
+                                .path(request.getDescription(false).replace("uri=", ""))
+                                .build();
+
+                return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
+        }
+
+        // ========== VALIDATION ERRORS ==========
+
         @ExceptionHandler(MethodArgumentNotValidException.class)
         public ResponseEntity<ErrorResponse> handleValidationErrors(
                         MethodArgumentNotValidException ex,
@@ -90,7 +143,6 @@ public class GlobalExceptionHandler {
                 return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
 
-        // Path variable type conversion errors (UUID, enum, etc.)
         @ExceptionHandler(MethodArgumentTypeMismatchException.class)
         public ResponseEntity<ErrorResponse> handleTypeMismatch(
                         MethodArgumentTypeMismatchException ex,
@@ -111,7 +163,6 @@ public class GlobalExceptionHandler {
                 return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
 
-        // JSON deserialization errors (invalid UUID, enum values, etc.)
         @ExceptionHandler(HttpMessageNotReadableException.class)
         public ResponseEntity<ErrorResponse> handleHttpMessageNotReadable(
                         HttpMessageNotReadableException ex,
@@ -137,6 +188,8 @@ public class GlobalExceptionHandler {
                 return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
 
+        // ========== NOT FOUND ERRORS ==========
+
         @ExceptionHandler(NoHandlerFoundException.class)
         public ResponseEntity<ErrorResponse> handleNoHandlerFound(
                         NoHandlerFoundException ex,
@@ -153,7 +206,8 @@ public class GlobalExceptionHandler {
                 return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
 
-        // Catch-all for unexpected errors
+        // ========== CATCH-ALL (MUST BE LAST) ==========
+
         @ExceptionHandler(Exception.class)
         public ResponseEntity<ErrorResponse> handleGlobalException(
                         Exception ex,

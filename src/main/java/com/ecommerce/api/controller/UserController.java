@@ -4,8 +4,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ecommerce.api.dto.request.UserRequest;
+import com.ecommerce.api.dto.request.UserUpdateRequest;
 import com.ecommerce.api.dto.response.UserResponse;
-import com.ecommerce.api.entity.Role;
 import com.ecommerce.api.entity.User;
 import com.ecommerce.api.repository.UserRepository;
 import com.ecommerce.api.security.CustomUserDetailsService;
@@ -65,7 +65,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<UserResponse> updateUser(@PathVariable UUID id,
-            @Valid @RequestBody UserRequest request) {
+            @Valid @RequestBody UserUpdateRequest request) {
         UserResponse updatedUser = userService.updateUser(id, request);
         return ResponseEntity.ok(updatedUser);
     }

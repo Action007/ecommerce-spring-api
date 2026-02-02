@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional; // Use Spring's, not Jakarta
 import com.ecommerce.api.dto.request.UserRequest;
+import com.ecommerce.api.dto.request.UserUpdateRequest;
 import com.ecommerce.api.dto.response.UserResponse;
 import com.ecommerce.api.entity.User;
 import com.ecommerce.api.exception.DuplicateResourceException;
@@ -20,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImplc implements UserService {
+public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
   private final UserMapper userMapper;
@@ -66,14 +67,16 @@ public class UserServiceImplc implements UserService {
 
   @Override
   @Transactional
-  public UserResponse updateUser(UUID id, UserRequest request) {
+  public UserResponse updateUser(UUID id, UserUpdateRequest request) {
     User user = userRepository.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
 
     user.setFirstName(request.getFirstName());
     user.setLastName(request.getLastName());
     user.setEmail(request.getEmail());
-    user.setPassword(request.getPassword());
+
+    String hashedPassword = passwordEncoder.encode(request.getPassword());
+    user.setPassword(hashedPassword);
 
     User updatedUser = userRepository.save(user);
     return userMapper.toResponse(updatedUser);
