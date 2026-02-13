@@ -51,7 +51,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
                 // Step 5: Create authentication object
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email,
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        userDetails,
                         null, // Credentials (password) not needed - already authenticated by JWT
                         userDetails.getAuthorities());
 

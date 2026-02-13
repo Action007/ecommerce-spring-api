@@ -39,12 +39,10 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public AuthResponse register(RegisterRequest request) {
-        // 1. Check if email exists
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new DuplicateResourceException("Email already registered");
         }
 
-        // 2. Create user
         User user = new User();
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
@@ -54,11 +52,9 @@ public class AuthServiceImpl implements AuthService {
 
         user = userRepository.save(user);
 
-        // 3. Generate tokens
         String accessToken = jwtUtil.generateAccessToken(user);
         String refreshToken = jwtUtil.generateRefreshToken(user);
 
-        // 4. Build response
         return AuthResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
@@ -69,21 +65,17 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthResponse login(LoginRequest request) {
         try {
-            // 1. Authenticate using Spring Security
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             request.getEmail(),
                             request.getPassword()));
 
-            // 2. If we reach here, credentials are valid
             User user = userRepository.findByEmail(request.getEmail())
                     .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-            // 3. Generate tokens
             String accessToken = jwtUtil.generateAccessToken(user);
             String refreshToken = jwtUtil.generateRefreshToken(user);
 
-            // 4. Build response
             return AuthResponse.builder()
                     .accessToken(accessToken)
                     .refreshToken(refreshToken)
@@ -98,22 +90,17 @@ public class AuthServiceImpl implements AuthService {
     public AuthResponse refreshToken(RefreshTokenRequest request) {
         String refreshToken = request.getRefreshToken();
 
-        // 1. Validate refresh token
         if (!jwtUtil.validateToken(refreshToken)) {
             throw new InvalidTokenException("Invalid or expired refresh token");
         }
 
-        // 2. Extract user from token (now safe - JwtUtil handles nulls)
         UUID userId = jwtUtil.extractUserId(refreshToken);
-
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        // 3. Generate new tokens
         String newAccessToken = jwtUtil.generateAccessToken(user);
         String newRefreshToken = jwtUtil.generateRefreshToken(user);
 
-        // 4. Build response
         return AuthResponse.builder()
                 .accessToken(newAccessToken)
                 .refreshToken(newRefreshToken)
