@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ecommerce.api.dto.request.ProductRequest;
 import com.ecommerce.api.dto.response.PageResponse;
@@ -26,7 +27,6 @@ import com.ecommerce.api.repository.ProductRepository;
 import com.ecommerce.api.service.ProductService;
 import com.ecommerce.api.specification.ProductSpecification;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service

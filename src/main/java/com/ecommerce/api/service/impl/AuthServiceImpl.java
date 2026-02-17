@@ -7,6 +7,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ecommerce.api.dto.request.LoginRequest;
 import com.ecommerce.api.dto.request.RefreshTokenRequest;
@@ -21,8 +22,6 @@ import com.ecommerce.api.mapper.UserMapper;
 import com.ecommerce.api.repository.UserRepository;
 import com.ecommerce.api.service.AuthService;
 import com.ecommerce.api.util.JwtUtil;
-
-import jakarta.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
