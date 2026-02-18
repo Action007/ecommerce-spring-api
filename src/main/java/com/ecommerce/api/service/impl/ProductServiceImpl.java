@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -89,6 +91,7 @@ public class ProductServiceImpl implements ProductService {
                 return productMapper.toResponse(updatedProduct);
         }
 
+        @CacheEvict(value = { "products", "productList" }, allEntries = true)
         @Override
         @Transactional
         public void deleteProduct(UUID id) {
@@ -104,14 +107,15 @@ public class ProductServiceImpl implements ProductService {
                 productRepository.save(product);
         }
 
+        @Cacheable(value = "products", key = "#id")
         @Override
         public ProductResponse getProductById(UUID id) {
                 Product product = productRepository.findById(id)
                                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
-
                 return productMapper.toResponse(product);
         }
 
+        @CacheEvict(value = { "products", "productList" }, allEntries = true)
         @Override
         @Transactional
         public void updateProductRating(UUID productId, int newRating) {

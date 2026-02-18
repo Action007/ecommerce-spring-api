@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.ecommerce.api.dto.request.CartItemRequest;
+import com.ecommerce.api.dto.request.UpdateQuantityRequest;
 import com.ecommerce.api.dto.response.CartResponse;
 import com.ecommerce.api.service.CartService;
 import com.ecommerce.api.util.SecurityUtil;
@@ -29,9 +30,9 @@ public class CartController {
     @PutMapping("/items/{productId}")
     public ResponseEntity<CartResponse> updateQuantity(
             @PathVariable UUID productId,
-            @RequestParam int quantity) {
+            @RequestBody UpdateQuantityRequest request) {
         UUID userId = SecurityUtil.getCurrentUserId();
-        return ResponseEntity.ok(cartService.updateQuantity(userId, productId, quantity));
+        return ResponseEntity.ok(cartService.updateQuantity(userId, productId, request.getQuantity()));
     }
 
     @DeleteMapping("/items/{productId}")

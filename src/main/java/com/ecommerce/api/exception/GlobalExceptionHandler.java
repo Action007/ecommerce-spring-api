@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -53,9 +54,9 @@ public class GlobalExceptionHandler {
                 return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
 
-        @ExceptionHandler(DuplicateResourceException.class)
-        public ResponseEntity<ErrorResponse> handleDuplicateResource(
-                        DuplicateResourceException ex,
+        @ExceptionHandler(PaymentFailedException.class)
+        public ResponseEntity<ErrorResponse> handlePaymentFailedException(
+                        PaymentFailedException ex,
                         WebRequest request) {
 
                 ErrorResponse error = ErrorResponse.builder()
@@ -136,6 +137,22 @@ public class GlobalExceptionHandler {
         }
 
         // ========== VALIDATION ERRORS ==========
+
+        @ExceptionHandler(DuplicateResourceException.class)
+        public ResponseEntity<ErrorResponse> handleDuplicateResource(
+                        DuplicateResourceException ex,
+                        WebRequest request) {
+
+                ErrorResponse error = ErrorResponse.builder()
+                                .timestamp(Instant.now())
+                                .status(HttpStatus.CONFLICT.value())
+                                .error(HttpStatus.CONFLICT.getReasonPhrase())
+                                .message(ex.getMessage())
+                                .path(request.getDescription(false).replace("uri=", ""))
+                                .build();
+
+                return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+        }
 
         @ExceptionHandler(MethodArgumentNotValidException.class)
         public ResponseEntity<ErrorResponse> handleValidationErrors(
@@ -239,7 +256,7 @@ public class GlobalExceptionHandler {
                 return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
 
-        // ========== CATCH-ALL (MUST BE LAST) ==========
+        // ========== CATCH-ALL ==========
 
         @ExceptionHandler(Exception.class)
         public ResponseEntity<ErrorResponse> handleGlobalException(
@@ -255,5 +272,21 @@ public class GlobalExceptionHandler {
                                 .build();
 
                 return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+        public ResponseEntity<ErrorResponse> handleMethodNotSupported(
+                        HttpRequestMethodNotSupportedException ex,
+                        WebRequest request) {
+
+                ErrorResponse error = ErrorResponse.builder()
+                                .timestamp(Instant.now())
+                                .status(HttpStatus.METHOD_NOT_ALLOWED.value())
+                                .error(HttpStatus.METHOD_NOT_ALLOWED.getReasonPhrase())
+                                .message("Method " + ex.getMethod() + " is not supported for this endpoint")
+                                .path(request.getDescription(false).replace("uri=", ""))
+                                .build();
+
+                return new ResponseEntity<>(error, HttpStatus.METHOD_NOT_ALLOWED);
         }
 }

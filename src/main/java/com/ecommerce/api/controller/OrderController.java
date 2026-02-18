@@ -8,9 +8,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.ecommerce.api.dto.request.PlaceOrderRequest;
+import com.ecommerce.api.dto.request.UpdateOrderStatusRequest;
 import com.ecommerce.api.dto.response.OrderResponse;
 import com.ecommerce.api.dto.response.PageResponse;
-import com.ecommerce.api.entity.OrderStatus;
 import com.ecommerce.api.service.OrderService;
 import com.ecommerce.api.util.SecurityUtil;
 
@@ -55,7 +55,7 @@ public class OrderController {
     @PatchMapping("/{orderId}/status")
     public ResponseEntity<OrderResponse> updateOrderStatus(
             @PathVariable UUID orderId,
-            @RequestParam OrderStatus status) {
-        return ResponseEntity.ok(orderService.updateOrderStatus(orderId, status));
+            @RequestBody UpdateOrderStatusRequest request) {
+        return ResponseEntity.ok(orderService.updateOrderStatus(orderId, request.getStatus()));
     }
 }

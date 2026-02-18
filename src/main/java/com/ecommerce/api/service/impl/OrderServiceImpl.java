@@ -28,6 +28,7 @@ import com.ecommerce.api.exception.ResourceNotFoundException;
 import com.ecommerce.api.repository.CartRepository;
 import com.ecommerce.api.repository.OrderRepository;
 import com.ecommerce.api.repository.ProductRepository;
+import com.ecommerce.api.service.EmailService;
 import com.ecommerce.api.service.OrderService;
 import com.ecommerce.api.service.impl.PaymentServiceImpl.PaymentService;
 
@@ -40,6 +41,7 @@ public class OrderServiceImpl implements OrderService {
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
     private final PaymentService paymentService;
+    private final EmailService emailService;
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
@@ -96,7 +98,7 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalAmount(totalAmount);
 
         // 4. Save order
-        orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
 
         // 5. Process payment (rolls back everything if fails)
         paymentService.processPayment(order, request.getPaymentDetails());
@@ -104,6 +106,9 @@ public class OrderServiceImpl implements OrderService {
         // 6. Clear cart (only reaches here if payment succeeded)
         cart.getItems().clear();
         cartRepository.save(cart);
+
+        // Send email asynchronously (doesn't block response)
+        emailService.sendOrderConfirmation(savedOrder);
 
         return mapToOrderResponse(order);
     }
