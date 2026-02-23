@@ -72,6 +72,7 @@ public class ProductServiceImpl implements ProductService {
                 return productMapper.toResponse(savedProduct);
         }
 
+        @CacheEvict(value = { "products", "productList" }, allEntries = true)
         @Override
         @Transactional
         public ProductResponse updateProduct(UUID id, ProductRequest request) {
